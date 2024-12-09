@@ -1,3 +1,9 @@
 package judge0
 
-type Client struct{}
+import "net/http"
+
+type Client struct {
+	authProvider AuthProvider
+	httpClient   *http.Client
+	baseURL      string
+}
