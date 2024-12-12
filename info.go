@@ -9,14 +9,14 @@ import (
 
 )
 
-type DashboardSubmission struct {
+type Status struct {
 	Id       int  `json:"id"`
 	Description string  `json:"description"`
 }
-type DashboardSubmissions []DashboardSubmission
+type Statuses []Status
 
 
-func (client * Client) StatusesGet() (DashboardSubmissions, error)   {
+func (client * Client) StatusesGet() (Statuses, error)   {
 	judge0Url, err := url.Parse(client.authProvider.GetBaseURL() + "/statuses")
 	if err != nil {
 		return nil, fmt.Errorf("error parsing Judge0 URL: %v", err)
@@ -40,7 +40,7 @@ func (client * Client) StatusesGet() (DashboardSubmissions, error)   {
 
 	}
 	
-	var submissions DashboardSubmissions
+	var submissions Statuses
 	err = json.Unmarshal(body, &submissions)
 	if err != nil {
 		return nil, fmt.Errorf("error unmarshalling response: %v", err)
