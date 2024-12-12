@@ -12,16 +12,16 @@ type AuthProvider interface {
 }
 
 // Implements the AuthProivder Interface for the RapidAPI Judge0 Provider
-type rapidAPIProivder struct {
+type rapidAPIProvider struct {
 	rapidAPIKey string
 }
 
-func (rap *rapidAPIProivder) SetAuthHeaders(req *http.Request) {
+func (rap *rapidAPIProvider) SetAuthHeaders(req *http.Request) {
 	req.Header.Set("x-rapidapi-key", rap.rapidAPIKey)
 	req.Header.Set("x-rapidapi-host", rapidAPIHost)
 }
 
-func (rap *rapidAPIProivder) GetBaseURL() string {
+func (rap *rapidAPIProvider) GetBaseURL() string {
 	return rapidAPIHost
 }
 
@@ -38,14 +38,39 @@ func (sap *suluAPIProvider) GetBaseURL() string {
 	return suluAPIHost
 }
 
-func NewSuluProivder(apiKey string) AuthProvider {
+type customAPIProvider struct {
+	baseURL      string
+	headerField  string
+	customAPIKey string
+}
+
+func (cap *customAPIProvider) SetAuthHeaders(req *http.Request) {
+	req.Header.Set(cap.headerField, cap.customAPIKey)
+}
+
+func (cap *customAPIProvider) GetBaseURL() string {
+	return cap.baseURL
+}
+
+func NewCustomProvider(apiKey string, baseUrl string, headerField string) AuthProvider {
+	if headerField == "" {
+		headerField = "X-Auth-Token"
+	}
+	return &customAPIProvider{
+		baseURL:      baseUrl,
+		headerField:  headerField,
+		customAPIKey: apiKey,
+	}
+}
+
+func NewSuluProvider(apiKey string) AuthProvider {
 	return &suluAPIProvider{
 		suluAPIKey: apiKey,
 	}
 }
 
 func NewRapidAPIProvider(apiKey string) AuthProvider {
-	return &rapidAPIProivder{
+	return &rapidAPIProvider{
 		rapidAPIKey: apiKey,
 	}
 }
