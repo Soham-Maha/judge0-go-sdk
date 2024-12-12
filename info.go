@@ -29,11 +29,11 @@ func (client * Client) StatusesGet() (Statuses, error)   {
 	// judgereq.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearer))
 
 	resp, err := http.DefaultClient.Do(judgereq)
-
 	if err != nil {
 		return nil, fmt.Errorf("error sending request to Judge0: %v", err)
-
+		
 	}
+	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
