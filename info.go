@@ -18,14 +18,15 @@ type DashboardSubmissions []DashboardSubmission
 
 func (client * Client) StatusesGet() (DashboardSubmissions, error)   {
 	judge0Url, err := url.Parse(client.authProvider.GetBaseURL() + "/statuses")
-
-	judgereq, err := http.NewRequest("GET", judge0Url.String(), nil)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing Judge0 URL: %v", err)
-
+	}
+	judgereq, err := http.NewRequest("GET", judge0Url.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing Judge0 url to GET request: %v", err)
 	}
 	judgereq.Header.Add("Content-Type", "application/json")
-	judgereq.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearer))
+	// judgereq.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearer))
 
 	resp, err := http.DefaultClient.Do(judgereq)
 
