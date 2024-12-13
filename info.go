@@ -15,31 +15,37 @@ type Status struct {
 }
 type Statuses []Status
 
-
-func (client * Client) StatusesGet() (Statuses, error)   {
-	judge0Url, err := url.Parse(client.authProvider.GetBaseURL() + "/statuses")
+func Judge0Get(url string) ([] byte, error) {
+	judgereq, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing Judge0 URL: %v", err)
-	}
-	judgereq, err := http.NewRequest("GET", judge0Url.String(), nil)
-	if err != nil {
-		return nil, fmt.Errorf("error parsing Judge0 url to GET request: %v", err)
+		return nil, fmt.Errorf("error creating the HTTP request: %v", err)
 	}
 	judgereq.Header.Add("Content-Type", "application/json")
-	// judgereq.Header.Add("Authorization", fmt.Sprintf("Bearer %v", bearer))
 
 	resp, err := http.DefaultClient.Do(judgereq)
 	if err != nil {
 		return nil, fmt.Errorf("error sending request to Judge0: %v", err)
-		
 	}
+
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
-
-	}
 	
+	}
+	return body, nil
+}
+
+
+func (client * Client) StatusesGet() (Statuses, error)   {
+	judge0Url, err := url.Parse(client.authProvider.GetBaseURL() + "/statuses")
+	if err != nil {
+		return nil, err
+	}
+	body, err := Judge0Get(judge0Url.String())
+	if err != nil {
+		return nil, fmt.Errorf("error making : %v", err)
+	}
 	var submissions Statuses
 	err = json.Unmarshal(body, &submissions)
 	if err != nil {
