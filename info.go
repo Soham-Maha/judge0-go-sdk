@@ -15,8 +15,8 @@ type Status struct {
 }
 type Statuses []Status
 
-func Judge0Get(url string) ([] byte, error) {
-	judgereq, err := http.NewRequest("GET", url, nil)
+func Judge0Get(url string, method string) ([] byte, error) {
+	judgereq, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating the HTTP request: %v", err)
 	}
@@ -42,7 +42,7 @@ func (client * Client) StatusesGet() (Statuses, error)   {
 	if err != nil {
 		return nil, err
 	}
-	body, err := Judge0Get(judge0Url.String())
+	body, err := Judge0Get(judge0Url.String(), "GET")
 	if err != nil {
 		return nil, fmt.Errorf("error making : %v", err)
 	}
