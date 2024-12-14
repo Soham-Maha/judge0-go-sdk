@@ -14,7 +14,6 @@ func (client *Client) doRequest(url string, method string, payload []byte) ([] b
 	judgereq.Header.Add("Content-Type", "application/json")
 
 	resp, err := client.httpClient.Do(judgereq)
-	// http.DefaultClient.Do(judgereq)
 	if err != nil {
 		return nil, fmt.Errorf("error sending request to Judge0: %v", err)
 	}
@@ -24,6 +23,11 @@ func (client *Client) doRequest(url string, method string, payload []byte) ([] b
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
 	
+	}
+	statusCode := resp.StatusCode
+
+	if statusCode != 200 {
+		return body, fmt.Errorf("error performing request")
 	}
 	return body, nil
 }

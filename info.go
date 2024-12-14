@@ -1,10 +1,5 @@
 package judge0
 
-type Status struct {
-	Id          int    `json:"id"`
-	Description string `json:"description"`
-}
-type Statuses []Status
 
 const (
 	IN_QUEUE = 1
