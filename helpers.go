@@ -22,7 +22,7 @@ func (client *Client) doRequest(url string, method string, payload []byte) ([] b
 	statusCode := resp.StatusCode
 
 	if statusCode != 200 {
-		return nil, fmt.Errorf("error performing request error code: %v", statusCode)
+		return nil, fmt.Errorf("error performing request. Status code: %v", statusCode)
 	}
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
