@@ -1,34 +1,42 @@
 package judge0
 
-import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"net/url"
-)
-
 type Status struct {
-	Id       int  `json:"id"`
-	Description string  `json:"description"`
+	Id          int    `json:"id"`
+	Description string `json:"description"`
 }
 type Statuses []Status
 
+const (
+	IN_QUEUE = 1
+	PROCESSING = 2
+	ACCEPTED = 3
+	WRONG_ANSWER = 4
+	TIME_LIMIT_EXCEEDED = 5
+	COMPILATION_ERROR = 6
+	RUNTIME_ERROR_SIGSEGV = 7
+	RUNTIME_ERROR_SIGXFSZ = 8
+	RUNTIME_ERROR_SIGFPE = 9
+	RUNTIME_ERROR_SIGABRT = 10
+	RUNTIME_ERROR_NZEC = 11
+	RUNTIME_ERROR_OTHER = 12
+	INTERNAL_ERROR = 13
+	EXEC_FORMAT_ERROR = 14
+)
 
-
-func (client * Client) GetStatus() (Statuses, error)   {
-	judge0Url, err := url.Parse(client.authProvider.GetBaseURL() + "/statuses")
-	if err != nil {
-		return nil, err
-	}
-	body, err := Judge0Request(judge0Url.String(), http.MethodGet, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error making : %v", err)
-	}
-	var submissions Statuses
-	err = json.Unmarshal(body, &submissions)
-	if err != nil {
-		return nil, fmt.Errorf("error unmarshalling response: %v", err)
-
-	}
-	return submissions, nil
+var statusMap = map[int]string{
+	IN_QUEUE:              "IN_QUEUE",
+	PROCESSING:            "PROCESSING",
+	ACCEPTED:              "ACCEPTED",
+	WRONG_ANSWER:          "WRONG_ANSWER",
+	TIME_LIMIT_EXCEEDED:   "TIME_LIMIT_EXCEEDED",
+	COMPILATION_ERROR:     "COMPILATION_ERROR",
+	RUNTIME_ERROR_SIGSEGV: "RUNTIME_ERROR_SIGSEGV",
+	RUNTIME_ERROR_SIGXFSZ: "RUNTIME_ERROR_SIGXFSZ",
+	RUNTIME_ERROR_SIGFPE:  "RUNTIME_ERROR_SIGFPE",
+	RUNTIME_ERROR_SIGABRT: "RUNTIME_ERROR_SIGABRT",
+	RUNTIME_ERROR_NZEC:    "RUNTIME_ERROR_NZEC",
+	RUNTIME_ERROR_OTHER:   "RUNTIME_ERROR_OTHER",
+	INTERNAL_ERROR:        "INTERNAL_ERROR",
+	EXEC_FORMAT_ERROR:     "EXEC_FORMAT_ERROR",
 }
+
